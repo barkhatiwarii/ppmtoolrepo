@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.validation.constraints.NotBlank;
@@ -35,6 +36,9 @@ public class Project {
 		Date created_At;
 		@JsonFormat(pattern = "dd-MM-yyyy")
 		Date updated_At;
+		
+		@OneToOne
+		private Backlog backlog;
 		public Date getCreated_At() {
 			return created_At;
 		}
@@ -93,6 +97,13 @@ public class Project {
 		@PreUpdate
 		protected void onUpdate() {
 			this.updated_At=new Date();
+		}
+	
+		public Backlog getBacklog() {
+			return backlog;
+		}
+		public void setBacklog(Backlog backlog) {
+			this.backlog = backlog;
 		}
 		
 }

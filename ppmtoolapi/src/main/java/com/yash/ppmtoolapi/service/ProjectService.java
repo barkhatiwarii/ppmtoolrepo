@@ -9,9 +9,24 @@ import com.yash.ppmtoolapi.repository.*;
 @Service
 public class ProjectService {
 	@Autowired
-	ProjectRepository projectRepository;
+	private ProjectRepository projectRepository;
+	
+	@Autowired
+	private BacklogRepository backlogRepository;
+	
 	public Project saveOrUpdate(Project project) {
 		try {
+			//while saving the project backlog should be saved
+			//when project is not having id, it is a new project - you need to create a backlog
+			if(project.getId()==null) {
+				Backlog backlog = new Backlog();
+				project.setBacklog(backlog); //OneToOne Relationship
+				backlog.setProject(project); //OneToOne Relationship
+				backlog.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
+
+			}
+			//when updating the project, backlog should be set as it is, it should not be null
+			
 			project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
 			return projectRepository.save(project);
 		}
