@@ -28,6 +28,8 @@ public class ProjectController {
 	@PostMapping("")
 	public ResponseEntity<?> saveProject(@Valid @RequestBody Project project,BindingResult result)
 	{
+		System.out.print(project);
+
 		ResponseEntity<?> errorMap=mapValidationErrorService.mapValidationError(result);
 		if(errorMap!=null)
 			return errorMap;

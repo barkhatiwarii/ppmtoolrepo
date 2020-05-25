@@ -2,8 +2,10 @@ package com.yash.ppmtoolapi.domain;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,16 +30,16 @@ public class Project {
 		String projectIdentifier;
 		@NotBlank(message = "Project Decription should not be blank")
 		String description;
-		@JsonFormat(pattern = "dd-MM-yyyy")
+		@JsonFormat(pattern = "yyyy-MM-dd")
 		Date start_date;
-		@JsonFormat(pattern = "dd-MM-yyyy")
+		@JsonFormat(pattern = "yyyy-MM-dd")
 		Date end_date;
-		@JsonFormat(pattern = "dd-MM-yyyy")
+		@JsonFormat(pattern = "yyyy-MM-dd")
 		Date created_At;
-		@JsonFormat(pattern = "dd-MM-yyyy")
+		@JsonFormat(pattern = "yyyy-MM-dd")
 		Date updated_At;
 		
-		@OneToOne
+		@OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL,mappedBy = "project")
 		private Backlog backlog;
 		public Date getCreated_At() {
 			return created_At;
@@ -104,6 +106,12 @@ public class Project {
 		}
 		public void setBacklog(Backlog backlog) {
 			this.backlog = backlog;
+		}
+		@Override
+		public String toString() {
+			return "Project [id=" + id + ", projectName=" + projectName + ", projectIdentifier=" + projectIdentifier
+					+ ", description=" + description + ", start_date=" + start_date + ", end_date=" + end_date
+					+ ", created_At=" + created_At + ", updated_At=" + updated_At + ", backlog=" + backlog + "]";
 		}
 		
 }

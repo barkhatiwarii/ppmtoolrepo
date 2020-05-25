@@ -18,16 +18,16 @@ public class ProjectService {
 		try {
 			//while saving the project backlog should be saved
 			//when project is not having id, it is a new project - you need to create a backlog
+			project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
 			if(project.getId()==null) {
 				Backlog backlog = new Backlog();
 				project.setBacklog(backlog); //OneToOne Relationship
 				backlog.setProject(project); //OneToOne Relationship
-				backlog.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
+				backlog.setProjectIdentifier(project.getProjectIdentifier());
 
 			}
 			//when updating the project, backlog should be set as it is, it should not be null
 			
-			project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
 			return projectRepository.save(project);
 		}
 		catch(Exception e)
