@@ -1,5 +1,7 @@
 package com.yash.ppmtoolapi.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -73,6 +75,42 @@ public class ProjectTaskService {
 	}
 
 	public ProjectTask findPTByProjectSequence(String backlog_id, String pt_id) {
-		return projectTaskRepository.findByProjectSequence(pt_id);
+		// make sure that backlog id exists
+		Backlog backlog = backlogRepository.findByProjectIdentifier(backlog_id);
+		if (backlog == null) {
+			throw new ProjectNotFoundException("Project with id: " + backlog_id + " does not exists");
+		}
+
+		// make sure that project task id exists
+		ProjectTask projectTask = projectTaskRepository.findByProjectSequence(pt_id);
+		if (projectTask == null) {
+			throw new ProjectNotFoundException("Project Task with id :'" + pt_id + "' does not exists");
+		}
+
+		// make sure that backlog_id and project identifier are same
+		if (!projectTask.getProjectIdentifier().equals(backlog_id)) {
+			throw new ProjectNotFoundException("Backlog id " + backlog_id + "does not match with the project identifier"
+					+ projectTask.getProjectIdentifier());
+		}
+		return projectTask;
+	}
+	
+	public ProjectTask UpdateByProjectSequence(ProjectTask updatedTask, String backlog_id, String pt_id) {
+		//find the existing project task
+		ProjectTask projectTask=findPTByProjectSequence(backlog_id, pt_id);
+		// replace the project task with the updated task
+		projectTask=updatedTask;
+		
+		//save the project
+		return projectTaskRepository.save(projectTask);
+	}
+	
+	public void deletePTByProjectSequence(String backlog_id, String pt_id) {
+		ProjectTask projectTask= findPTByProjectSequence(backlog_id, pt_id);
+		Backlog backlog= projectTask.getBacklog();
+		List<ProjectTask> pts= backlog.getProjectTasks();
+		pts.remove(projectTask);
+		backlogRepository.save(backlog);
+		projectTaskRepository.delete(projectTask);
 	}
 }

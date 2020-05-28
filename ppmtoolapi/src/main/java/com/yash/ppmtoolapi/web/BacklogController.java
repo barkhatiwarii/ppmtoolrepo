@@ -1,4 +1,4 @@
-package com.yash.ppmtoolapi.web;
+	package com.yash.ppmtoolapi.web;
 
 import javax.validation.Valid;
 
@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,5 +52,21 @@ public class BacklogController {
 	{
 		ProjectTask projectTask=projectTaskService.findPTByProjectSequence(backlog_id, pt_id);
 		return new ResponseEntity<ProjectTask>(projectTask,HttpStatus.OK);
+	}
+	
+	@PatchMapping("/{backlog_id}/{pt_id}")
+	public ResponseEntity<?> updateProjectTask(@Valid @RequestBody ProjectTask projectTask, BindingResult result, @PathVariable
+			String backlog_id, @PathVariable String pt_id){
+		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationError(result);
+		if (errorMap != null)
+			return errorMap;
+		ProjectTask updatedTask=projectTaskService.UpdateByProjectSequence(projectTask, backlog_id, pt_id);
+		return new ResponseEntity<ProjectTask>(updatedTask, HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/{backlog_id}/{pt_id}")
+	public ResponseEntity<?> deleteProjectTask(@PathVariable String backlog_id, @PathVariable String pt_id){
+	projectTaskService.deletePTByProjectSequence(backlog_id,pt_id);
+	return new ResponseEntity<String>("Project task '"+pt_id+"' was deleted successfully!", HttpStatus.OK);
 	}
 }
