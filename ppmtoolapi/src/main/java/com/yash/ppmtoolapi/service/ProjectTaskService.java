@@ -49,12 +49,13 @@ public class ProjectTaskService {
 			// setting the default priority and status
 			// if project task is created first time, then set the default priority as 3
 
-			if (projectTask.getPriority() == null) {
+			//Initial priority when priority is null
+			if(projectTask.getPriority()==0 || projectTask.getPriority()==null) {
 				projectTask.setPriority(3);
-
-			}
-			if (projectTask.getStatus() == "" || projectTask.getStatus() == null) {
-				projectTask.setStatus("TODO");
+			}			
+			//INITIAL Status when status is null
+			if(projectTask.getStatus()=="" || projectTask.getStatus()==null) {
+				projectTask.setStatus("TO_DO");
 			}
 
 			return projectTaskRepository.save(projectTask);
